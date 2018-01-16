@@ -38,3 +38,6 @@ where tfBinaryURL identifies the URL of the TensorFlow Python package. The appro
  $ pip3 install --upgrade \
  https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.4.1-py2-none-any.whl
 If you encounter installation problems, see Common Installation Problems.
+
+
+# Source: https://www.tensorflow.org/install/install_mac#installing_with_virtualenv

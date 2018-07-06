@@ -1,26 +1,28 @@
-#
-#   simple_mnist.py
-#   Simple NN to classify handwritten digits from MNIST dataset.
-#
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
+# Only log errors (to prevent unnecessary cluttering of the console)
+tf.logging.set_verbosity(tf.logging.ERROR)
+
+logpath="./tfb_logs/"
+
 # We use the TF helper function to pull down the data from the MNIST site
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 
-# x is the placeholder for the 28 x 28 image data
-# y_ is called "y bar" and is a 10 element vector, containing the predicted probability of each
-# digit (0-9) class. Such as [0.14, 0.8, 0, 0, 0, 0, 0, 0, 0, 0.06]
-x = tf.placeholder(tf.float32, shape=[None, 784])
-y_ = tf.placeholder(tf.float32, shape=[None, 10])
+# x is the placeholder for the 28 x 28 image data (the input)
+# y_ is a 10 element vector, containing the predicted probability of each digit (0-9) class
+# Define the weights and balances (always keep the dimensions in mind)
+x = tf.placeholder(tf.float32, shape=[None, 784], name="x_placeholder")
+y_ = tf.placeholder(tf.float32, shape=[None, 10], name="y_placeholder")
 
-# Define the weights and balances
-W = tf.Variable(tf.zeros([784, 10]))
-b = tf.Variable(tf.zeros([10]))
+W = tf.Variable(tf.zeros([784, 10]), name="weights_variable")
+b = tf.Variable(tf.zeros([10]), name="bias_variable")
 
-# Define the model
-y = tf.nn.softmax(tf.matmul(x, W) + b)
+# Define the activation function. Here softmax for classification
+y = tf.nn.softmax(tf.matmul(x, W) + b, name="softmaxActivation")
+
+print(x, y_, W, b)
 
 # Loss is cross entropy
 cross_entropy = tf.reduce_mean(
@@ -39,6 +41,9 @@ sess = tf.Session()
 
 # Perform the initialization which is only the initialization of all global variables
 sess.run(init)
+
+# TensorBoard - Write the default graph out so we can view it's structure
+tbWriter = tf.summary.FileWriter(logpath, sess.graph)
 
 # Perform 1000 training steps
 for i in range(1000):

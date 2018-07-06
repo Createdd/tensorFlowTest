@@ -12,8 +12,12 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+# VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Other
+MNIST_data

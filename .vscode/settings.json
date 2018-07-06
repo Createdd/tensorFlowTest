@@ -1,0 +1,9 @@
+{
+  "python.venvPath": "~/env/bin/python",
+  "python.pythonPath": "${workspaceFolder}/env/bin/python",
+  "python.linting.pylintEnabled": true,
+  "python.linting.enabled": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "black",
+  // "python.formatting.blackPath": "${workspaceFolder}/env/bin/black"
+}

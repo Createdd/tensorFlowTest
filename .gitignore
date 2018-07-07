@@ -21,3 +21,4 @@ pip-selfcheck.json
 
 # Other
 MNIST_data
+tfb_logs

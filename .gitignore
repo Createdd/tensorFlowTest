@@ -11,6 +11,8 @@
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+env/
+
 
 # VSCode
 .vscode/*
@@ -19,6 +21,11 @@ pip-selfcheck.json
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Jupyter
+jupyterNotebook/*
+!jupyterNotebook/mnistBasicJupyter.ipynb
+
 # Other
 MNIST_data
 tfb_logs
+

@@ -33,20 +33,20 @@ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss, name="gradDes
 # Create an interactive session that can span multiple code blocks.
 # Perform the initialization which is only the initialization of all global variables
 init = tf.global_variables_initializer()
-sess = tf.Session()
+sess = tf.InteractiveSession()
 sess.run(init)
 
-# TensorBoard - Write the default graph out so we can view it's structure
-tbWriter = tf.summary.FileWriter(logpath, sess.graph)
 
 # Perform 1000 training steps
+# Feed the next batch and run the training
 for i in range(1000):
-    batch_xs, batch_ys = mnist.train.next_batch(100)  # get 100 random data points
+    batch_xs, batch_ys = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
-# Evaluate how well the model did. Do this by compating the digit with the highest probability in
-# actual (y) and predicted (y_)
+# Evaluate the accuracy of the model
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+print(correct_prediction.eval())
+
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 test_accuracy = sess.run(
     accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}
@@ -54,3 +54,6 @@ test_accuracy = sess.run(
 print("Test Accuracy: {0}%".format(test_accuracy * 100.0))
 
 sess.close()
+
+# TensorBoard - Write the default graph out so we can view it's structure
+tbWriter = tf.summary.FileWriter(logpath, sess.graph)

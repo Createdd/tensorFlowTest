@@ -26,7 +26,10 @@ y = tf.nn.softmax(tf.matmul(x, W) + b, name="softmaxActivation")
 # Loss is defined as cross entropy between the prediction and the real value
 # Each training step in gradient descent we want to minimize the loss
 loss = tf.reduce_mean(
-    tf.nn.softmax_cross_entropy_with_logits_v2(labels=y_, logits=y, name="lossFunction")
+    tf.nn.softmax_cross_entropy_with_logits_v2(
+        labels=y_, logits=y, name="lossFunction"
+    ),
+    name="loss",
 )
 train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss, name="gradDescent")
 
@@ -36,12 +39,18 @@ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss, name="gradDes
 # Perform the initialization which is only the initialization of all global variables
 init = tf.global_variables_initializer()
 
-sess = tf.Session()
-# sess = tf.InteractiveSession()
-# sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+# ------ Set Session or InteractiveSession
+# sess = tf.Session()
+sess = tf.InteractiveSession()
 
-sess = tf_debug.TensorBoardDebugWrapperSession(sess, "DanielDeutschs-MacBook-Pro.local:8080")
+# -----------Set possible debugWrapper
+# sess = tf_debug.LocalCLIDebugWrapperSession(sess)
+# sess = tf_debug.TensorBoardDebugWrapperSession(
+#     sess, "DanielDeutschs-MacBook-Pro.local:8080"
+# )
+
 sess.run(init)
+
 
 
 # Perform 1000 training steps
@@ -57,8 +66,11 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 # )
 # correct_prediction.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels})
 
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name="accuracy")
 accuracy.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+print('Accuracy', sess.run(
+    accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}
+))
 
 test_accuracy = sess.run(
     accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}

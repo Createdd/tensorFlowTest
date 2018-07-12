@@ -83,22 +83,20 @@ history = model.fit(
     verbose=0,
 )
 
-
 # evaluate model
 
 results = model.evaluate(test_data, test_labels)
 print(results)
 
-
 # ========== create a graph for accuracy and loss over time
-# use the history object from the training of the model
-history_dict = history.history
-history_dict.keys()
-
 import matplotlib
 
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
+
+# use the history object from the training of the model
+history_dict = history.history
+history_dict.keys()
 
 # choose 4 metrics to monitor training and set the x-axis to the epochs
 acc = history_dict["acc"]

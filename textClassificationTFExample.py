@@ -20,7 +20,6 @@ print(train_data[0])
 # Retrieves the dictionary mapping word indices back to words.
 word_index = imdb.get_word_index()
 
-
 # Add 3 new indices
 # Exchange key and values
 # Create function to create the text according to the indices
@@ -36,33 +35,31 @@ def decode_review(integerList):
     return " ".join([reverse_word_index.get(i, "?") for i in integerList])
 
 
-# ====== Prepare data
+# ====== Prepare (test/training)data by converting into tensors
 train_data = keras.preprocessing.sequence.pad_sequences(
     train_data, value=word_index["<PAD>"], padding="post", maxlen=256
 )
-
 test_data = keras.preprocessing.sequence.pad_sequences(
     test_data, value=word_index["<PAD>"], padding="post", maxlen=256
 )
-
-len(train_data[0]), len(train_data[1])
-# print(train_data[0])
 
 # ========== Build the model
 
 # input shape is the vocabulary count used for the movie reviews (10,000 words)
 vocab_size = 10000
 
+# 1. layer to turn positive integers (indexes) into dense vectors of fixed size
+# 2. layer returns a fixed-length output vector for each example by averaging over the sequence dimension
+# 3. output vector is piped through a fully-connected (Dense) layer with 16 hidden units and a rectified linear unit activation
+# 4. last layer is densely connected with a single output node. Using the sigmoid activation function, the result is between 0 and 1
 model = keras.Sequential()
 model.add(keras.layers.Embedding(vocab_size, 16))
 model.add(keras.layers.GlobalAveragePooling1D())
 model.add(keras.layers.Dense(16, activation=tf.nn.relu))
 model.add(keras.layers.Dense(1, activation=tf.nn.sigmoid))
 
-model.summary()
 
-# loss function
-
+# because of the binary classification problem we'll use the binary_crossentropy loss function
 model.compile(
     optimizer=tf.train.AdamOptimizer(), loss="binary_crossentropy", metrics=["accuracy"]
 )
@@ -75,7 +72,7 @@ partial_x_train = train_data[10000:]
 y_val = train_labels[:10000]
 partial_y_train = train_labels[10000:]
 
-# train model
+# ========== use the fit method, which trains the model for a given number of epochs (iterations on a dataset).
 
 history = model.fit(
     partial_x_train,
@@ -83,18 +80,18 @@ history = model.fit(
     epochs=40,
     batch_size=512,
     validation_data=(x_val, y_val),
-    verbose=1,
+    verbose=0,
 )
 
 
 # evaluate model
 
 results = model.evaluate(test_data, test_labels)
-
 print(results)
 
-# create graph for accuracy and loss over time
 
+# ========== create a graph for accuracy and loss over time
+# use the history object from the training of the model
 history_dict = history.history
 history_dict.keys()
 
@@ -103,16 +100,15 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
-acc = history.history["acc"]
-val_acc = history.history["val_acc"]
-loss = history.history["loss"]
-val_loss = history.history["val_loss"]
-
+# choose 4 metrics to monitor training and set the x-axis to the epochs
+acc = history_dict["acc"]
+val_acc = history_dict["val_acc"]
+loss = history_dict["loss"]
+val_loss = history_dict["val_loss"]
 epochs = range(1, len(acc) + 1)
 
-# "bo" is for "blue dot"
-plt.plot(epochs, loss, "bo", label="Training loss")
-# b is for "solid blue line"
+# plot the loss
+plt.plot(epochs, loss, "go", label="Training loss")
 plt.plot(epochs, val_loss, "b", label="Validation loss")
 plt.title("Training and validation loss")
 plt.xlabel("Epochs")
@@ -121,20 +117,19 @@ plt.legend()
 
 plt.show()
 
+# plot the accuracy
+plt.clf()
+acc_values = acc
+val_acc_values = val_acc
 
-plt.clf()  # clear figure
-acc_values = history_dict["acc"]
-val_acc_values = history_dict["val_acc"]
-
-plt.plot(epochs, acc, "bo", label="Training acc")
+plt.plot(epochs, acc, "go", label="Training acc")
 plt.plot(epochs, val_acc, "b", label="Validation acc")
 plt.title("Training and validation accuracy")
 plt.xlabel("Epochs")
-plt.ylabel("Loss")
+plt.ylabel("Accuracy")
 plt.legend()
 
 plt.show()
-
 
 # ============ Several copyright credits
 # @title Licensed under the Apache License, Version 2.0 (the "License");#@title

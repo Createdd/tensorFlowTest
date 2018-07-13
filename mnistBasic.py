@@ -20,8 +20,8 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10], name="y_placeholder")
 W = tf.Variable(tf.zeros([784, 10]), name="weights_variable")
 b = tf.Variable(tf.zeros([10]), name="bias_variable")
 
-# Define the activation function = the real y. Softmax suits well for classification
-y = tf.nn.softmax(tf.matmul(x, W) + b, name="softmaxActivation")
+# Define the activation function = the real y. Do not use softmax here, as it will be applied in the next step
+y = tf.matmul(x, W) + b
 
 # Loss is defined as cross entropy between the prediction and the real value
 # Each training step in gradient descent we want to minimize the loss

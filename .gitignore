@@ -28,4 +28,5 @@ jupyterNotebook/*
 # Other
 MNIST_data
 tfb_logs
+tfb_deep_logs
 

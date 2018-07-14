@@ -49,20 +49,21 @@ sess.run(init)
 for i in range(1000):
     batch_xs, batch_ys = mnist.train.next_batch(100)
     sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
+    if i % 20 == 0:
+        loss = tf.Print(loss, [loss], message="loss")
+        loss.eval(feed_dict={x: mnist.test.images, y_: mnist.test.labels})
+        print(
+            f"Loss of the model is: {sess.run(loss, feed_dict={x: mnist.test.images, y_: mnist.test.labels})}%"
+        )
+
 
 # Evaluate the accuracy of the model
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name="accuracy")
 
-print("=====================================")
-print(
-    f"The bias parameter is: {sess.run(b, feed_dict={x: mnist.test.images, y_: mnist.test.labels})}"
-)
+print("============================================")
 print(
     f"Accuracy of the model is: {sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})*100}%"
-)
-print(
-    f"Loss of the model is: {sess.run(loss, feed_dict={x: mnist.test.images, y_: mnist.test.labels})}"
 )
 
 sess.close()

@@ -17,8 +17,13 @@ y_ = tf.placeholder(tf.float32, shape=[None, 10], name="y_placeholder")
 W = tf.Variable(tf.zeros([784, 10]), name="weights_variable")
 b = tf.Variable(tf.zeros([10]), name="bias_variable")
 
+
 # Define the activation function = the real y. Do not use softmax here, as it will be applied in the next step
-y = tf.matmul(x, W) + b
+assert x.get_shape().as_list() == [None, 784]
+assert y_.get_shape().as_list() == [None, 10]
+assert W.get_shape().as_list() == [784, 10]
+assert b.get_shape().as_list() == [10]
+y = tf.add(tf.matmul(x, W), b)
 
 # Loss is defined as cross entropy between the prediction and the real value
 # Each training step in gradient descent we want to minimize the loss
@@ -36,7 +41,7 @@ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(loss, name="gradDes
 init = tf.global_variables_initializer()
 
 # ------ Set Session or InteractiveSession
-sess = tf.Session()
+sess = tf.InteractiveSession()
 sess.run(init)
 
 # Perform 1000 training steps
@@ -49,9 +54,15 @@ for i in range(1000):
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name="accuracy")
 
-test_accuracy = sess.run(
-    accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}
+print("=====================================")
+print(
+    f"The bias parameter is: {sess.run(b, feed_dict={x: mnist.test.images, y_: mnist.test.labels})}"
 )
-print("Test Accuracy: {}%".format(test_accuracy * 100.0))
+print(
+    f"Accuracy of the model is: {sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels})*100}%"
+)
+print(
+    f"Loss of the model is: {sess.run(loss, feed_dict={x: mnist.test.images, y_: mnist.test.labels})}"
+)
 
 sess.close()

@@ -7,7 +7,6 @@ from datetime import datetime
 subFolder = datetime.now().strftime("%Y%m%d-%H%M%S")
 logdir = f"./tfb_logs/{subFolder}/"
 
-
 # Only log errors (to prevent unnecessary cluttering of the console)
 tf.logging.set_verbosity(tf.logging.ERROR)
 

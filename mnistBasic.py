@@ -11,9 +11,6 @@ logdir = f"./tfb_logs/{subFolder}/"
 # Only log errors (to prevent unnecessary cluttering of the console)
 tf.logging.set_verbosity(tf.logging.ERROR)
 
-tf.summary.FileWriterCache.clear()
-tf.reset_default_graph()
-
 # We use the TF helper function to pull down the data from the MNIST site
 mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 

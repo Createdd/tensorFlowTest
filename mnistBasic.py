@@ -1,7 +1,6 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-from tensorflow.python import debug as tf_debug
 from datetime import datetime
 
 # Create a subfolder for each log

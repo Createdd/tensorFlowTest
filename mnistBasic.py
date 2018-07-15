@@ -1,6 +1,7 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+from tensorflow.python import debug as tf_debug
 from datetime import datetime
 
 # Create a subfolder for each log
@@ -27,7 +28,7 @@ with tf.name_scope("variables_scope"):
 
     with tf.name_scope("bias_scope"):
         b = tf.Variable(tf.zeros([10]), name="bias_variable")
-        tf.summary.histogram("bias_histogram", b)
+        # tf.summary.histogram("bias_histogram", b)
 
     # Define the activation function = the real y. Do not use softmax here, as it will be applied in the next step
     assert x.get_shape().as_list() == [None, 784]
@@ -72,7 +73,11 @@ with tf.name_scope("accuracy_scope"):
 init = tf.global_variables_initializer()
 
 # ------ Set Session or InteractiveSession
-sess = tf.InteractiveSession()
+# sess = tf.InteractiveSession()
+sess = tf.Session()
+sess = tf_debug.TensorBoardDebugWrapperSession(
+    sess, "DanielDeutschs-MacBook-Pro.local:8080"
+)
 sess.run(init)
 
 # TensorBoard - Write the default graph out so we can view it's structure
@@ -97,4 +102,4 @@ print(
 sess.close()
 
 # Use this in the terminal to start the tensorboard server
-# tensorboard --logdir=./tfb_logs/ --port=8090 --host=127.0.0.1
+# tensorboard --logdir=./tfb_logs/ --port=8090 --debugger_port 8080 --host=127.0.0.1

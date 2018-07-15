@@ -75,9 +75,7 @@ init = tf.global_variables_initializer()
 # ------ Set Session or InteractiveSession
 # sess = tf.InteractiveSession()
 sess = tf.Session()
-sess = tf_debug.TensorBoardDebugWrapperSession(
-    sess, "DanielDeutschs-MacBook-Pro.local:8080"
-)
+sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 sess.run(init)
 
 # TensorBoard - Write the default graph out so we can view it's structure

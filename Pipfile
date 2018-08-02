@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true
+
+[environment]
+PIPENV_VENV_IN_PROJECT=true
+
+[packages]
+tensorboard = "*"
+pylint = "*"
+black = "*"
+tensorflow = "*"
+matplotlib = "*"

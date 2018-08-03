@@ -3,7 +3,12 @@
 
 import tensorflow as tf
 from tensorflow import keras
+from tensorflow.python import debug as tf_debug
 import numpy as np
+
+# ======= Use in case of debugging
+# tf.keras.backend.set_session(tf_debug.LocalCLIDebugWrapperSession(tf.Session()))
+
 
 # ======= Import the IMDB dataset
 
@@ -11,9 +16,7 @@ imdb = keras.datasets.imdb
 (train_data, train_labels), (test_data, test_labels) = imdb.load_data(num_words=10000)
 
 # ======= Explore the data
-
-print("Training entries: {}, labels: {}".format(len(train_data), len(train_labels)))
-print(train_data[0])
+# print(train_data[0])
 
 # ======= Convert integers back to words
 
@@ -88,46 +91,56 @@ history = model.fit(
 results = model.evaluate(test_data, test_labels)
 print(results)
 
-# ========== create a graph for accuracy and loss over time
-import matplotlib
+# predict examples
+for i in range(1):
+    prediction = model.predict(np.array([test_data[i]]))
+    print(
+        f"Prediction for: {decode_review(test_data[i])} is {np.around((prediction[0][0])*100)}% positive"
+    )
 
-matplotlib.use("TkAgg")
-import matplotlib.pyplot as plt
+# prediction = model.predict('this is a shit movie', batch_size=128)
+# print(prediction)
 
-# use the history object from the training of the model
-history_dict = history.history
-history_dict.keys()
+# # ========== create a graph for accuracy and loss over time
+# import matplotlib
 
-# choose 4 metrics to monitor training and set the x-axis to the epochs
-acc = history_dict["acc"]
-val_acc = history_dict["val_acc"]
-loss = history_dict["loss"]
-val_loss = history_dict["val_loss"]
-epochs = range(1, len(acc) + 1)
+# matplotlib.use("TkAgg")
+# import matplotlib.pyplot as plt
 
-# plot the loss
-plt.plot(epochs, loss, "go", label="Training loss")
-plt.plot(epochs, val_loss, "b", label="Validation loss")
-plt.title("Training and validation loss")
-plt.xlabel("Epochs")
-plt.ylabel("Loss")
-plt.legend()
+# # use the history object from the training of the model
+# history_dict = history.history
+# history_dict.keys()
 
-plt.show()
+# # choose 4 metrics to monitor training and set the x-axis to the epochs
+# acc = history_dict["acc"]
+# val_acc = history_dict["val_acc"]
+# loss = history_dict["loss"]
+# val_loss = history_dict["val_loss"]
+# epochs = range(1, len(acc) + 1)
 
-# plot the accuracy
-plt.clf()
-acc_values = acc
-val_acc_values = val_acc
+# # plot the loss
+# plt.plot(epochs, loss, "go", label="Training loss")
+# plt.plot(epochs, val_loss, "b", label="Validation loss")
+# plt.title("Training and validation loss")
+# plt.xlabel("Epochs")
+# plt.ylabel("Loss")
+# plt.legend()
 
-plt.plot(epochs, acc, "go", label="Training acc")
-plt.plot(epochs, val_acc, "b", label="Validation acc")
-plt.title("Training and validation accuracy")
-plt.xlabel("Epochs")
-plt.ylabel("Accuracy")
-plt.legend()
+# plt.show()
 
-plt.show()
+# # plot the accuracy
+# plt.clf()
+# acc_values = acc
+# val_acc_values = val_acc
+
+# plt.plot(epochs, acc, "go", label="Training acc")
+# plt.plot(epochs, val_acc, "b", label="Validation acc")
+# plt.title("Training and validation accuracy")
+# plt.xlabel("Epochs")
+# plt.ylabel("Accuracy")
+# plt.legend()
+
+# plt.show()
 
 # ============ Several copyright credits
 # @title Licensed under the Apache License, Version 2.0 (the "License");#@title
